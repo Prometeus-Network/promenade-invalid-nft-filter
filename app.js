@@ -1,5 +1,6 @@
 require('dotenv').config()
 const mongoose = require('mongoose')
+const healthcheck = require('./healthcheck');
 
 require('./models/nftitems')
 
@@ -13,4 +14,5 @@ db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', async () => {
   console.log('nft filter has been started')
   filterNFTs()
+  healthcheck();
 })
