@@ -4,6 +4,8 @@ const validUrl = require('valid-url')
 const mongoose = require('mongoose')
 const NFTITEM = mongoose.model('NFTITEM')
 
+const log = (...args) => console.log(`[${(new Date).toISOString()}] `, ...args)
+
 const toLowerCase = (val) => {
   if (val) return val.toLowerCase()
   else return val
@@ -27,7 +29,7 @@ const filterNFT = async () => {
       nft.isAppropriate = false
       nft.isFiltered = true
       await nft.save()
-      console.log('invalid uri', uri, nft.contractAddress, nft.tokenID)
+      log('invalid uri', uri, nft.contractAddress, nft.tokenID)
       return
     }
     // check if uri really exists
@@ -37,7 +39,7 @@ const filterNFT = async () => {
         nft.isAppropriate = false
         nft.isFiltered = true
         await nft.save()
-        console.log(
+        log(
           'no data part defined from response',
           uri,
           nft.contractAddress,
@@ -50,7 +52,7 @@ const filterNFT = async () => {
         nft.isAppropriate = false
         nft.isFiltered = true
         await nft.save()
-        console.log(
+        log(
           'invalid metadata with thumbnail .',
           uri,
           nft.contractAddress,
@@ -67,7 +69,7 @@ const filterNFT = async () => {
           nft.isAppropriate = false
           nft.isFiltered = true
           await nft.save()
-          console.log(
+          log(
             'invalid image data',
             uri,
             imageUrl,
@@ -83,7 +85,7 @@ const filterNFT = async () => {
           nft.imageURL = imageUrl
           if (!nft.name) nft.name = name
           // nft.isFiltered = true
-          console.log(
+          log(
             'thumbnail is . while there is image, re-thumb-index',
             nft.contractAddress,
             nft.tokenID,
@@ -99,7 +101,7 @@ const filterNFT = async () => {
               nft.imageURL = imageUrl
               if (!nft.name) nft.name = name
               await nft.save()
-              console.log(
+              log(
                 'thumbnail wrongly indexed',
                 nft.contractAddress,
                 nft.tokenID,
@@ -110,7 +112,7 @@ const filterNFT = async () => {
               if (!nft.name) nft.name = name
               nft.isFiltered = true
               await nft.save()
-              console.log(
+              log(
                 'nft is correct in all',
                 nft.contractAddress,
                 nft.tokenID,
@@ -125,8 +127,9 @@ const filterNFT = async () => {
             if (!nft.name) nft.name = name
             nft.isFiltered = true
             await nft.save()
-            console.log(
+            log(
               'cannot get thumbnail data',
+              `${storagePath}${thumbnail}`,
               nft.contractAddress,
               nft.tokenID,
             )
@@ -137,26 +140,30 @@ const filterNFT = async () => {
         nft.isAppropriate = false
         nft.isFiltered = true
         await nft.save()
-        console.log(
+        log(
           'cannot get image data response',
+          imageUrl,
           nft.contractAddress,
           nft.tokenID,
         )
         return
       }
     } catch (error) {
+      console.error(error)
       nft.isAppropriate = false
       nft.isFiltered = true
       await nft.save()
-      console.log(
+      log(
         'cannot get response from uri',
+        nft.uri,
         nft.contractAddress,
         nft.tokenID,
       )
       return
     }
   } catch (error) {
-    console.error(error);
+    console.log('overall error, shit!')
+    console.error(error)
   }
 }
 
