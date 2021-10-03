@@ -152,7 +152,7 @@ const filterNFT = async () => {
       return
     }
   } catch (error) {
-    console.log('overall error, shit!')
+    console.error(error);
   }
 }
 
