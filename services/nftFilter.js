@@ -17,6 +17,10 @@ const filterNFT = async () => {
       isFiltered: false,
       thumbnailPath: { $ne: '-' },
     })
+    if (!nft) {
+      return;
+    }
+
     let uri = nft.tokenURI
     // first check url type
     if (!validUrl.isUri(uri)) {
